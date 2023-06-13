@@ -31,7 +31,6 @@ public class CustomerServiceImplement implements ICustomerService {
 
     @Override
     public Response<List<CustomerDto>> getAllUsers() {
-        List<Customer> customerList = customerRepository.findAll();
         List<CustomerDto> customerDtoList = customerRepository.findAll()
                 .stream()
                 .map(user -> modelMapper.map(user, CustomerDto.class))
@@ -52,9 +51,16 @@ public class CustomerServiceImplement implements ICustomerService {
     public Response<Customer> createUser(CustomerDto customerDto) {
         ResponseMessage responseMessage = userValidation.validate(customerDto, null);
         if (responseMessage == CustomerResponseMessage.SUCCESSFUL) {
-            Customer customer = new Customer();
+            Long lastId = customerRepository.findMaxId();
+            Long newId = (lastId != null) ? lastId + 1 : 1;
+            Customer customer = new Customer(newId);
             customerDto.convertToEntity(customer);
-            customerRepository.save(customer);
+            try {
+                customerRepository.save(customer);
+            }
+            catch (Exception e) {
+                return new Response<>(e);
+            }
             return new Response<>(customer, responseMessage);
         }
         return new Response<>(responseMessage);

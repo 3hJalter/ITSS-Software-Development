@@ -16,6 +16,11 @@ public class Response<T> {
         this.errorMessage = responseMessage.getMessage();
     }
 
+    public Response(Exception e) {
+        this.errorCode = "400";
+        this.errorMessage = e.getCause().getMessage();
+    }
+
     public Response(ResponseMessage responseMessage) {
         this.errorCode = responseMessage.getCode();
         this.errorMessage = responseMessage.getMessage();

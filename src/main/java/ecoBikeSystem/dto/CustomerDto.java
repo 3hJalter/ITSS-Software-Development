@@ -11,13 +11,11 @@ import java.sql.Timestamp;
 public class CustomerDto {
     private String username;
     private String email;
-    private Timestamp createTime;
     private String phone;
 
     public void convertToEntity(Customer customer) {
         customer.setUsername(this.username);
         customer.setEmail(this.email);
-        customer.setCreateTime(this.createTime);
         customer.setPhone(this.phone);
     }
 }
